@@ -3,7 +3,9 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
-
+const services = require("./services/general.service");
+// const mongoose = require('mongoose');
+// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 // parse Url-encoded bodies (html forms)
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -25,10 +27,16 @@ app.get('/', function(req, res) {
 app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
-app.use('/api/shorturl', function (req, res) {
+app.post('/api/shorturl', function (req, res) {
   let { url } = req.body;
-  res.json({ original_url: url, short_url: url });
+  let response = services.postShortUrlService(url);
+  res.json(response);
 });
+app.get('/api/shorturl/:short_url', (req, res) => {
+  let { short_url } = req.params;
+  console.log(req)
+  res.json({ short_url: short_url });
+})
 
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
