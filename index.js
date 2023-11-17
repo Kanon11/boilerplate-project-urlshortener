@@ -4,8 +4,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const app = express();
 const services = require("./services/general.service");
-// const mongoose = require('mongoose');
-// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
+const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 // parse Url-encoded bodies (html forms)
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -27,15 +27,22 @@ app.get('/', function(req, res) {
 app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
-app.post('/api/shorturl', function (req, res) {
+app.post('/api/shorturl', async function (req, res) {
   let { url } = req.body;
-  let response = services.postShortUrlService(url);
+  let response = await services.postShortUrlService(url)
   res.json(response);
 });
-app.get('/api/shorturl/:short_url', (req, res) => {
+app.get('/api/shorturl/:short_url?', async(req, res) => {
   let { short_url } = req.params;
-  console.log(req)
-  res.json({ short_url: short_url });
+  let redirect_url_obj = await services.findRedirectUrlService(short_url);
+  console.log("obj: ", redirect_url_obj);
+  if (redirect_url_obj) {
+    res.redirect(redirect_url_obj.url);
+  }
+  else {
+    res.send("Not found");
+  }
+
 })
 
 app.listen(port, function() {
