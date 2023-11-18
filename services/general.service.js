@@ -5,6 +5,18 @@ const insertUserService = async (username) => {
     let result = await db_helper.insertUserData(username);
     return result;
 }
+const insertExerciseService = async (_id, description, duration, date) => {
+    let result = await db_helper.insertExerciseData(_id, description, duration, date);
+    return result;
+}
+const getAllExerciseService = async (_id) => {
+    let result = await db_helper.getFormattedExercises(_id);
+    return result;
+}
+const getAllUserService = async () => {
+    let result = await db_helper.get_all_user();
+    return result;
+}
 const postShortUrlService = async (url) => {
     let response={}
     let isValid = all_helper.isValidUrl(url);
@@ -28,7 +40,10 @@ const findRedirectUrlService = async (short_url) => {
     return response;
 }
 module.exports = {
+    insertExerciseService,
+    getAllUserService,
     insertUserService,
     postShortUrlService,
-    findRedirectUrlService
+    findRedirectUrlService,
+    getAllExerciseService
 }

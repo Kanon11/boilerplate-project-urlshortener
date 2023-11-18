@@ -9,7 +9,26 @@ let insertUserController = async(req, res) => {
     let result=await all_services.insertUserService(username)
     return res.json(result);
 }
+let getAllUserController = async (req, res) => {
+    let result = await all_services.getAllUserService();
+    return res.json(result);
+}
+let insertUserExerciseController = async (req, res) => {
+    let { _id } = req.params;
+    let { description, duration, date } = req.body;
+    console.log(req.body)
+    let result = await all_services.insertExerciseService(_id,description,duration,date);
+    return res.json(result);
+}
+let getAllExercise = async (req, res) => {
+    let { _id } = req.params;
+    let result = await all_services.getAllExerciseService(_id);
+    return result;
+}
 module.exports = {
+    getAllExercise,
+    insertUserExerciseController,
+    getAllUserController,
     insertUserController,
     home
 }

@@ -2,6 +2,15 @@ let Url = require("../Models/Url");
 let User = require("../Models/User");
 let Exercise = require("../Models/Exercise");
 
+const get_all_user = async () => {
+try {
+    const all_user = await User.find().select('_id username').lean().exec();
+    return all_user;
+} catch (error) {
+    console.log(error);
+    return null;
+}
+}
 const insertUserData = async (name) => {
     try {
         const existingUser = await User.findOne({ username: name });
@@ -21,24 +30,52 @@ const insertUserData = async (name) => {
         return null;
     }
 }
-const insertExerciseData = async (_id,) => {
+async function getFormattedExercises(_id) {
     try {
-        const user = await User.findOne({ _id,description,duration,date });
+        const exercises = await Exercise.find({user:_id})
+            .populate('user', 'username')
+            .exec();
+
+        // Assuming 'exercises' contains the array of Exercise documents
+        const formattedExercises = exercises.map(exercise => ({
+            _id: exercise._id,
+            username: exercise.user.username,
+            date: exercise.date.toDateString(), // Format date as needed
+            duration: exercise.duration,
+            description: exercise.description
+        }));
+
+        return formattedExercises;
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+}
+const insertExerciseData = async (_id, description, duration, date) => {
+    try {
+        const user = await User.findOne({ _id });
 
         if (!user) {
             console.log('User not found');
             return null;
         }
-
+        let returnObj = {};
+        returnObj._id = user._id;
+        returnObj.username = user.username;
+        console.log("user: ", user);
         const newExercise = new Exercise({
             user: user._id,
             description: description,
             duration: duration,
-            date: new Date(date)
+            date: date?new Date(date):new Date()
         });
 
         const savedExercise = await newExercise.save();
-        return savedExercise;
+        console.log("sE: ", savedExercise);
+        returnObj.description = savedExercise.description;
+        returnObj.duration = savedExercise.duration;
+        returnObj.date = new Date(savedExercise.date).toDateString();
+        return returnObj;
     } catch (error) {
         console.error(error);
         return null;
@@ -74,8 +111,10 @@ const get_url_query = async (short_url) => {
 }
 
 module.exports = {
+    getFormattedExercises,
     insertExerciseData,
     save_url,
     get_url_query,
-    insertUserData
+    insertUserData,
+    get_all_user
 }
