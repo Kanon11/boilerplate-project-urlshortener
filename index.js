@@ -13,9 +13,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors());
-app.use(express.static('public'))
+app.use('/public', express.static(process.cwd() + '/public'));
 let exercise_rout = require('./routes/exercise.route');
 exercise_rout(app);
+let file_rout = require('./routes/file.route');
+file_rout(app);
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
