@@ -1,7 +1,10 @@
 
 const all_helper = require("../helpers/general.helper");
 const db_helper = require("../helpers/db.helper");
-
+const insertUserService = async (username) => {
+    let result = await db_helper.insertUserData(username);
+    return result;
+}
 const postShortUrlService = async (url) => {
     let response={}
     let isValid = all_helper.isValidUrl(url);
@@ -25,6 +28,7 @@ const findRedirectUrlService = async (short_url) => {
     return response;
 }
 module.exports = {
+    insertUserService,
     postShortUrlService,
     findRedirectUrlService
 }
