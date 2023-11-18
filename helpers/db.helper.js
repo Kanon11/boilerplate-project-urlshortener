@@ -51,11 +51,14 @@ async function getFormattedExercises(_id, from, to, limit) {
             query.date = { ...query.date, $lte: new Date(to) };
         }
         let exerciseQuery = Exercise.find(query);
-        if (limit && !isNaN(parseInt(limit))) {
+        if (limit) {
             exerciseQuery = exerciseQuery.limit(parseInt(limit));
         }
-        console.log("qqq: ", exerciseQuery)
-        const exercises = await exerciseQuery.exec();
+        console.log("qqq: ", query)
+        let exercises = await exerciseQuery.exec();
+        // if (exercises.length===0) {
+        //     exercises = [];
+        // }
 
         // Assuming 'exercises' contains the array of Exercise documents
         const formattedExercises = exercises.map(exercise => ({
