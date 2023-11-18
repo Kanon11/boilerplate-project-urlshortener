@@ -32,6 +32,7 @@ const insertUserData = async (name) => {
 }
 async function getFormattedExercises(_id, from, to, limit) {
     try {
+        console.log({ _id, from, to, limit })
         const user = await User.findOne({ _id });
 
         if (!user) {
@@ -56,9 +57,9 @@ async function getFormattedExercises(_id, from, to, limit) {
         }
         console.log("qqq: ", query)
         let exercises = await exerciseQuery.exec();
-        // if (exercises.length===0) {
-        //     exercises = [];
-        // }
+        if (exercises.length===0) {
+            exercises = [];
+        }
 
         // Assuming 'exercises' contains the array of Exercise documents
         const formattedExercises = exercises.map(exercise => ({
