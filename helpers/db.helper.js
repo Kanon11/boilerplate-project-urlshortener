@@ -57,9 +57,9 @@ async function getFormattedExercises(_id, from, to, limit) {
         }
         console.log("qqq: ", query)
         let exercises = await exerciseQuery.exec();
-        if (exercises.length===0) {
-            exercises = [];
-        }
+        // if (exercises.length===0) {
+        //     exercises = [];
+        // }
 
         // Assuming 'exercises' contains the array of Exercise documents
         const formattedExercises = exercises.map(exercise => ({
@@ -67,7 +67,7 @@ async function getFormattedExercises(_id, from, to, limit) {
             duration: exercise.duration,
             description: exercise.description
         }));
-        return {...returnObj,count:formattedExercises.length,logs:formattedExercises};
+        return {...returnObj,count:formattedExercises.length,log:formattedExercises};
     } catch (error) {
         console.error(error);
         return [];
