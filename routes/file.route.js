@@ -18,6 +18,6 @@ const upload = multer({ storage: storage })
 console.log("uplaod: ", upload);
 
 const router = (app) => {
-    app.post("/api/fileanalyse", upload.single('upfile'),file_controller.fileInof )
+    app.post("/api/fileanalyse", upload.single('file'),file_controller.fileInof )
 }
 module.exports = router;
