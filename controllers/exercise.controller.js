@@ -22,8 +22,9 @@ let insertUserExerciseController = async (req, res) => {
 }
 let getAllExercise = async (req, res) => {
     let { _id } = req.params;
-    let result = await all_services.getAllExerciseService(_id);
-    return result;
+    let { from, to, limit } = req.query;
+    let result = await all_services.getAllExerciseService(_id,from,to,limit);
+    return res.json(result);
 }
 module.exports = {
     getAllExercise,

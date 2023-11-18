@@ -9,7 +9,7 @@ const routers = (app) => {
     app.post('/api/users', allControllers.insertUserController);
     app.get('/api/users', allControllers.getAllUserController);
     app.post('/api/users/:_id/exercises', allControllers.insertUserExerciseController);
-    // app.get('/api/users/:_id/exercises', allControllers.getAllExercise);
+    app.get('/api/users/:_id/logs', allControllers.getAllExercise);
 
 }
 

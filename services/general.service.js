@@ -9,8 +9,8 @@ const insertExerciseService = async (_id, description, duration, date) => {
     let result = await db_helper.insertExerciseData(_id, description, duration, date);
     return result;
 }
-const getAllExerciseService = async (_id) => {
-    let result = await db_helper.getFormattedExercises(_id);
+const getAllExerciseService = async (_id, from, to, limit) => {
+    let result = await db_helper.getFormattedExercises(_id, from, to, limit);
     return result;
 }
 const getAllUserService = async () => {

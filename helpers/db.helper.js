@@ -30,22 +30,40 @@ const insertUserData = async (name) => {
         return null;
     }
 }
-async function getFormattedExercises(_id) {
+async function getFormattedExercises(_id, from, to, limit) {
     try {
-        const exercises = await Exercise.find({user:_id})
-            .populate('user', 'username')
-            .exec();
+        const user = await User.findOne({ _id });
+
+        if (!user) {
+            console.log('User not found');
+            return null;
+        }
+        let returnObj = {};
+        returnObj._id = user._id;
+        returnObj.username = user.username;
+        let query = { user: _id };
+        if (from ) {
+            returnObj.from = new Date(from).toDateString();
+            query.date = { ...query.date, $gte: new Date(from) };
+        }
+        if (to) {
+            returnObj.to = new Date(to).toDateString();
+            query.date = { ...query.date, $lte: new Date(to) };
+        }
+        let exerciseQuery = Exercise.find(query);
+        if (limit && !isNaN(parseInt(limit))) {
+            exerciseQuery = exerciseQuery.limit(parseInt(limit));
+        }
+        console.log("qqq: ", exerciseQuery)
+        const exercises = await exerciseQuery.exec();
 
         // Assuming 'exercises' contains the array of Exercise documents
         const formattedExercises = exercises.map(exercise => ({
-            _id: exercise._id,
-            username: exercise.user.username,
             date: exercise.date.toDateString(), // Format date as needed
             duration: exercise.duration,
             description: exercise.description
         }));
-
-        return formattedExercises;
+        return {...returnObj,count:formattedExercises.length,logs:formattedExercises};
     } catch (error) {
         console.error(error);
         return [];
