@@ -1,9 +1,9 @@
 const fileInof = (req, res) => {
-    console.log(req.file);
+    console.log(req.upfile);
     const fileInfo = {
-        name: req.file.originalname,
-        type: req.file.mimetype,
-        size: req.file.size
+        name: req.upfile.originalname,
+        type: req.upfile.mimetype,
+        size: req.upfile.size
     };
 
     res.json(fileInfo);
